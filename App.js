@@ -37,6 +37,7 @@ import LogIn from "./src/screens/LogIn";
 import SignUp from "./src/screens/SignUp";
 import Article from "./src/screens/Article";
 import ForgotPassword from "./src/screens/ForgotPassword";
+import Wardrobe from "./src/screens/Wardrobe";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw",
@@ -108,6 +109,7 @@ const App = () => {
         <Stack.Screen name="Closet" component={Closet} />
         <Stack.Screen name="Article" component={Article} />
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+        <Stack.Screen name="Wardrobe" component={Wardrobe} />
       </Stack.Navigator>
     </NavigationContainer>
   );
