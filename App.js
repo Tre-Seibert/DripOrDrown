@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Node } from "react";
 import { initializeApp } from "firebase/app";
+import './shim';
 import {
   getDocs,
   getFirestore,

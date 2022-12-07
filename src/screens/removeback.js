@@ -1,13 +1,12 @@
+import { theURL } from './Wardrobe';
 const axios = require('axios');
 const FormData = require('form-data');
 const fs = require('fs');
-const path = require('path');
-import { inputPath } from '../Wardrobe';
 
-inputPath = inputPath;
+
 const formData = new FormData();
 formData.append('size', 'auto');
-formData.append({uri: image}, fs.createReadStream(inputPath), path.basename(inputPath));
+formData.append('image_url', theURL);
 
 axios({
 method: 'post',
@@ -21,8 +20,8 @@ headers: {
 encoding: null
 })
 .then((response) => {
-    if(response.status != 200) return console.error('Error:', response.status, response.statusText);
-    fs.writeFileSync("no-bg.png", response.data);
+if(response.status != 200) return console.error('Error:', response.status, response.statusText);
+fs.writeFileSync("no-bg.png", response.data);
 })
 .catch((error) => {
     return console.error('Request failed:', error);
