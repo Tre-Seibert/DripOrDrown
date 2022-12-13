@@ -3,30 +3,13 @@ import {
     View,
     Text,
     StyleSheet,
-    Image,
     FlatList,
     TouchableOpacity,
-    Button,
 } from "react-native";
-
 import { initializeApp } from "firebase/app";
-import {
-    getDocs,
-    getFirestore,
-    collection,
-    firestore,
-    firebase,
-    addDoc,
-    get,
-    doc,
-    getDoc,
-    limit,
-    query,
-    where,
-    setDoc,
-    getDocFromCache,
-} from "firebase/firestore/lite";
-import { color } from "react-native-reanimated";
+import { getDocs, getFirestore, collection } from "firebase/firestore/lite";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {navigation} from "react-native-navigation"
 const firebaseConfig = {
     apiKey: "AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw",
     authDomain: "dripordrown-90905.firebaseapp.com",
@@ -42,28 +25,50 @@ require("firebase/firestore");
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const getEmail = async () => {
+    console.log("In Function");
+    try {
+        const value = await AsyncStorage.getItem("@email");
+        if (value !== null) {
+            console.log(value);
+            return value;
+        } else {
+            console.log("No value");
+        }
+    } catch (e) {
+        // error reading value
+        console.log("Error setting value: ", e);
+    }
+};
 
-export default function Closet({ navigation, navigation: { goBack }, route }) {
+export default function Closet({ navigation }) {
     const [clothes, setClothes] = useState([]);
-    const { email } = route.params;
-
+    var email;
+    //console.log(email);
+    try {
+        email = getEmail();
+    } catch (e) {
+        console.log(e);
+    }
     const fetchBlogs = async () => {
-        console.log(email);
         const list = [];
         if (email != null) {
-            const querySnapshot = await getDocs(
-                collection(db, "users", email, "clothes")
-            );
-
-            querySnapshot.forEach((doc) => {
-                let myData = doc.data();
-                myData.id = doc.id;
-                myData.e = email;
-                list.push({ ...myData });
-                // doc.data() is never undefined for query doc snapshots
-                console.log(doc.id, " => ", doc.data());
-                setClothes(list);
-            });
+            try {
+                const querySnapshot = await getDocs(
+                    collection(db, "users", email, "clothes")
+                );
+                querySnapshot.forEach((doc) => {
+                    let myData = doc.data();
+                    myData.id = doc.id;
+                    myData.e = email;
+                    list.push({ ...myData });
+                    // doc.data() is never undefined for query doc snapshots
+                    console.log(doc.id, " => ", doc.data());
+                    setClothes(list);
+                });
+            } catch (err) {
+                console.error("Error: ", err);
+            }
         }
     };
 
@@ -133,14 +138,14 @@ export default function Closet({ navigation, navigation: { goBack }, route }) {
 const styles = StyleSheet.create({
     bruh: {
         backgroundColor: "blue",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
     },
     button: {
         flex: 1,
-        right:85,
-        margin:5,
-        bottom:10,
-        position:'absolute',
+        right: 85,
+        margin: 5,
+        bottom: 10,
+        position: "absolute",
     },
     buttonTO: {
         borderColor: "black",
