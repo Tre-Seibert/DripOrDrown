@@ -45,9 +45,12 @@ const db = getFirestore(app);
 
 export default function Closet({ navigation, navigation: { goBack }, route }) {
     const [clothes, setClothes] = useState([]);
-    const { email } = route.params;
-
+    const { email, menu } = route.params;
+    
     const fetchBlogs = async () => {
+        if(menu){
+            navigation.navigate("HomeMenu", {email:email})
+        }
         console.log(email);
         const list = [];
         if (email != null) {
