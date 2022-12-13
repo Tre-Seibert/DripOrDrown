@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, getDoc, doc } from "firebase/firestore/lite";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import {
     StatusBar,
     StyleSheet,
@@ -11,6 +13,7 @@ import {
     View,
     TouchableOpacity,
     Alert,
+    Dimensions,
 } from "react-native";
 const firebaseConfig = {
     apiKey: "AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw",
@@ -27,6 +30,7 @@ require("firebase/firestore");
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const { height } = Dimensions.get("window");
 
 export default function LogIn({ navigation }) {
     const [email, setEmail] = useState("");
@@ -64,7 +68,7 @@ export default function LogIn({ navigation }) {
                         />
                     </View>
                     <TouchableOpacity
-                        onPress={() => navigation.navigate("Forgot Password")}
+                        onPress={() => navigation.navigate("ForgotPassword")}
                     >
                         <Text style={styles.forgot_button}>
                             Forgot Password?
@@ -75,20 +79,29 @@ export default function LogIn({ navigation }) {
                         style={styles.loginBtn}
                         onPress={() => loginPress(email, password, navigation)}
                     >
-                        <Text style={styles.registerText}>LOGIN</Text>
+                        <Text>LOGIN</Text>
                     </TouchableOpacity>
                 </View>
             </KeyboardAwareScrollView>
         </>
     );
 }
-
+const storeKey = "@email";
+const storeData = async (value) => {
+    try {
+        await AsyncStorage.setItem(storeKey, value);
+    } catch (e) {
+        // saving error
+        console.log(e);
+    }
+};
 async function loginPress(email, password, navigation) {
     let user = await getDoc(doc(db, "users", email));
     if (user.exists()) {
         if (password === (await user.get("password"))) {
             //login to homepage
-            navigation.navigate("Home", { email: email });
+            storeData(email)
+            navigation.navigate("Home");
             console.log("Login Successful.");
         } else {
             //incorrect password
@@ -121,8 +134,10 @@ const styles = StyleSheet.create({
         backgroundColor: "#1C4BA5",
         alignItems: "center",
         justifyContent: "center",
-        borderRadius: 5,
+        borderRadius: 0,
         borderColor: "#1C4BA5",
+        paddingBottom: "20%",
+        height: height,
     },
 
     inputView: {
@@ -160,13 +175,7 @@ const styles = StyleSheet.create({
         height: 50,
         alignItems: "center",
         justifyContent: "center",
-        marginTop: 20,
         backgroundColor: "white",
-    },
-    loginOr: {
-        paddingTop: 20,
-        color: "white",
-        fontSize: 15,
     },
     image: {
         width: 300,
