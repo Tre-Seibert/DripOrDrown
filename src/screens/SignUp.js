@@ -9,6 +9,7 @@ import {
     Image,
     View,
     TouchableOpacity,
+    Dimensions,
 } from "react-native";
 const firebaseConfig = {
     apiKey: "AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw",
@@ -26,6 +27,7 @@ require("firebase/firestore");
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const {height} = Dimensions.get("window");
 
 export default function SignUp() {
     const [email, setEmail] = useState("");
@@ -102,8 +104,10 @@ const styles = StyleSheet.create({
         backgroundColor: "#1C4BA5",
         alignItems: "center",
         justifyContent: "center",
-        borderRadius: 5,
-        borderColor: "white",
+        borderRadius: 0,
+        borderColor: "#1C4BA5",
+        paddingBottom: "17%",
+        height: height,
     },
 
     inputView: {
@@ -119,7 +123,7 @@ const styles = StyleSheet.create({
         height: 50,
         flex: 1,
         padding: 10,
-        marginLeft: 20,
+        textAlign: "center",
     },
 
     forgot_button: {
@@ -141,13 +145,8 @@ const styles = StyleSheet.create({
         height: 50,
         alignItems: "center",
         justifyContent: "center",
-        marginTop: 20,
         backgroundColor: "white",
-    },
-    loginOr: {
-        paddingTop: 20,
-        color: "white",
-        fontSize: 15,
+        marginTop: 45,
     },
     image: {
         width: 300,
